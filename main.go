@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 type city struct {
@@ -36,13 +37,48 @@ func readFile(path string) []string {
 	return lines
 }
 
-func main() {
-	// fmt.Printf("Read file:\n")
-	// var strs = readFile("cities.txt")
-	// fmt.Printf("File read, first line: %s \n second line: %s \n", strs[0], strs[1])
+func buildCities(path string) []city {
+	// Load city data into required data structures
+	var cities []city
 
-	var c = city{name: "kba", north: "gbg", west: "uk", south: "skne", east: "sthlm"}
-	fmt.Printf("City created: %+v", c)
+	var mapData []string = readFile(path)
+
+	for i := 0; i < len(mapData); i++ { // Every line
+
+		var cols = strings.Fields(mapData[i]) // Split on spaces
+
+		var name string = cols[0]
+		var north string = ""
+		var west string = ""
+		var south string = ""
+		var east string = ""
+
+		for j := 1; j < len(cols); j++ {
+			// cols[j] == str(direction)=str(name) Right now
+			var s = strings.Split(cols[j], "=")
+			var direction, name = s[0], s[1]
+
+			switch {
+			case direction == "north":
+				north = name
+			case direction == "west":
+				west = name
+			case direction == "south":
+				south = name
+			case direction == "east":
+				east = name
+			}
+		}
+		var c = city{name, north, west, south, east}
+		cities = append(cities, c)
+	}
+	return cities
+}
+
+func main() {
+	fmt.Printf("Read file and create cities\n")
+	var cities = buildCities("cities.txt")
+	fmt.Printf("Cities created: \n First city: %+v \n Second city: %+v\n", cities[0], cities[1])
 
 	//Text file format:
 	// kba north=gbg west=uk south=skne east=sthlm
