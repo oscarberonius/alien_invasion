@@ -47,6 +47,30 @@ func (c city) getRandomNeighbour() string {
 	return city
 }
 
+func (c *city) removePaths(cityMap map[string][]int) {
+	// Removes any paths in a city object if that path is no longer in the city map
+
+	_, nok := cityMap[c.north]
+	if !nok {
+		c.north = ""
+	}
+
+	_, wok := cityMap[c.west]
+	if !wok {
+		c.west = ""
+	}
+
+	_, sok := cityMap[c.south]
+	if !sok {
+		c.south = ""
+	}
+
+	_, eok := cityMap[c.east]
+	if !eok {
+		c.east = ""
+	}
+}
+
 func readFile(path string) []string {
 	//Read file, return array of strings, one for each line
 	var lines []string
