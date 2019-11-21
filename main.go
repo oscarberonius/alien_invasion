@@ -72,9 +72,10 @@ func readFile(path string) []string {
 	return lines
 }
 
-func buildCities(path string) []city {
+func buildCities(path string) ([]city, map[string][]int) {
 	// Load city data into required data structures
 	var cities []city
+	var cityMap = map[string][]int{}
 
 	var mapData []string = readFile(path)
 
@@ -83,6 +84,7 @@ func buildCities(path string) []city {
 		var cols = strings.Fields(mapData[i]) // Split on spaces
 
 		var name string = cols[0]
+		cityMap[name] = []int{}
 		var north string = ""
 		var west string = ""
 		var south string = ""
@@ -103,19 +105,22 @@ func buildCities(path string) []city {
 			case direction == "east":
 				east = name
 			}
+			cityMap[name] = []int{}
+
 		}
 		var c = city{name, north, west, south, east}
 		cities = append(cities, c)
 	}
-	return cities
+	return cities, cityMap
 }
 
 func main() {
 	fmt.Printf("Read file and create cities\n")
-	var cities = buildCities("cities.txt")
+	var cities, cityMap = buildCities("cities.txt")
 	fmt.Printf("Cities created: \n First city: %+v \n Second city: %+v\n", cities[0], cities[1])
-	var neighbour = cities[0].getRandomNeighbour()
-	fmt.Printf("Random neighbour of city %+v : %s\n", cities[0], neighbour)
+	fmt.Printf("CityMap created: %+v\n", cityMap)
+	//var neighbour = cities[0].getRandomNeighbour()
+	//fmt.Printf("Random neighbour of city %+v : %s\n", cities[0], neighbour)
 
 	//Text file format:
 	// kba north=gbg west=uk south=skne east=sthlm
