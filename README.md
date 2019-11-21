@@ -1,8 +1,9 @@
 # Alien invasion
 ## Code challenge for learning Go
 
-Mad aliens are about to invade the earth and you are tasked with simulating the
+"Mad aliens are about to invade the earth and you are tasked with simulating the
 invasion.
+
 You are given a map containing the names of cities in the non-existent world of
 X. The map is in a file, with one city per line. The city name is first,
 followed by 1-4 directions (north, south, east, or west). Each one represents a
@@ -34,4 +35,4 @@ fight, print out a message like:
 
 Bar has been destroyed by alien 10 and alien 34!
 Once the program has finished, it should print out whatever is left of the world in the
-same format as the input file.
+same format as the input file."
