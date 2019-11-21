@@ -4,12 +4,47 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 type city struct {
 	name, north, west, south, east string
+}
+
+func (c city) getRandomNeighbour() string {
+	// Get a random neighbour of a city. Return name of city of no paths exist
+	var a []string
+	var city string
+
+	if c.north != "" {
+		a = append(a, c.north)
+	}
+
+	if c.west != "" {
+		a = append(a, c.west)
+	}
+
+	if c.south != "" {
+		a = append(a, c.south)
+	}
+
+	if c.east != "" {
+		a = append(a, c.east)
+	}
+
+	var neighbours = len(a)
+
+	if neighbours > 0 {
+		r := rand.New(rand.NewSource(time.Now().Unix()))
+		city = a[r.Intn(neighbours)]
+	} else {
+		city = c.name //Not very elegant but whatevs
+	}
+
+	return city
 }
 
 func readFile(path string) []string {
@@ -79,6 +114,8 @@ func main() {
 	fmt.Printf("Read file and create cities\n")
 	var cities = buildCities("cities.txt")
 	fmt.Printf("Cities created: \n First city: %+v \n Second city: %+v\n", cities[0], cities[1])
+	var neighbour = cities[0].getRandomNeighbour()
+	fmt.Printf("Random neighbour of city %+v : %s\n", cities[0], neighbour)
 
 	//Text file format:
 	// kba north=gbg west=uk south=skne east=sthlm
