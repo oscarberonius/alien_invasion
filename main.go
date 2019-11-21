@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+type city struct {
+	name, north, west, south, east string
+}
+
 func readFile(path string) []string {
 	//Read file, return array of strings, one for each line
 	var lines []string
@@ -33,9 +37,12 @@ func readFile(path string) []string {
 }
 
 func main() {
-	fmt.Printf("Read file:\n")
-	var strs = readFile("cities.txt")
-	fmt.Printf("File read, first line: %s \n second line: %s \n", strs[0], strs[1])
+	// fmt.Printf("Read file:\n")
+	// var strs = readFile("cities.txt")
+	// fmt.Printf("File read, first line: %s \n second line: %s \n", strs[0], strs[1])
+
+	var c = city{name: "kba", north: "gbg", west: "uk", south: "skne", east: "sthlm"}
+	fmt.Printf("City created: %+v", c)
 
 	//Text file format:
 	// kba north=gbg west=uk south=skne east=sthlm
