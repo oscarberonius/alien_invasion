@@ -107,7 +107,7 @@ func readFile(path string) []string {
 func buildCities(path string) ([]city, map[string][]int) {
 	// Load city data into required data structures
 	var cities []city
-	var cityMap = map[string][]int{}
+	var cityMap = map[string][]int{} // map(City name - alien id)
 
 	var mapData []string = readFile(path)
 
@@ -146,11 +146,34 @@ func buildCities(path string) ([]city, map[string][]int) {
 	return cities, cityMap
 }
 
+func spawnAliens(cityMap map[string][]int, numAliens int, currentAlien int) {
+	// Iterate through map and add alien IDs to each city
+	// Not completely random as maps aren't continually reshuffled, but will do for now
+
+	for k, v := range cityMap {
+		cityMap[k] = append(v, currentAlien)
+		currentAlien++
+		if currentAlien >= numAliens {
+			break
+		}
+	}
+
+	// If there are more aliens than cities, keep spawning 'randomly'
+	if currentAlien < numAliens {
+		spawnAliens(cityMap, numAliens, currentAlien)
+	}
+
+}
+
 func main() {
 	fmt.Printf("Read file and create cities\n")
-	var cities, cityMap = buildCities("cities.txt")
-	fmt.Printf("Cities created: \n First city: %+v \n Second city: %+v\n", cities[0], cities[1])
-	fmt.Printf("CityMap created: %+v\n", cityMap)
+	var _, cityMap = buildCities("cities.txt")
+	fmt.Printf("Citymap: %v\n", cityMap)
+	spawnAliens(cityMap, 30, 0)
+	fmt.Printf("30 aliens spawned: %+v\n", cityMap)
+
+	// fmt.Printf("Cities created: \n First city: %+v \n Second city: %+v\n", cities[0], cities[1])
+	// fmt.Printf("CityMap created: %+v\n", cityMap)
 	//var neighbour = cities[0].getRandomNeighbour()
 	//fmt.Printf("Random neighbour of city %+v : %s\n", cities[0], neighbour)
 
