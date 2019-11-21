@@ -1,9 +1,41 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"log"
+	"os"
+)
+
+func readFile(path string) []string {
+	//Read file, return array of strings, one for each line
+	var lines []string
+
+	file, err := os.OpenFile(path, os.O_RDONLY, os.ModePerm)
+
+	if err != nil {
+		log.Fatalf("Cannot open file, err: %v", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		var line = scanner.Text()
+		lines = append(lines, line)
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("Cannot scan file, err: %v", err)
+	}
+
+	return lines
+}
 
 func main() {
-	fmt.Printf("Hello world\n")
+	fmt.Printf("Read file:\n")
+	var strs = readFile("cities.txt")
+	fmt.Printf("File read, first line: %s \n second line: %s \n", strs[0], strs[1])
 
 	//Text file format:
 	// kba north=gbg west=uk south=skne east=sthlm
