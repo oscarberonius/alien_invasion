@@ -71,6 +71,14 @@ func (c *city) removePaths(cityMap map[string][]int) {
 	}
 }
 
+func removeAllPaths(c []city, cm map[string][]int) {
+	// Iterate through all city objects and remove destroyed paths
+
+	for i := 0; i < len(c); i++ {
+		c[i].removePaths(cm)
+	}
+}
+
 func readFile(path string) []string {
 	//Read file, return array of strings, one for each line
 	var lines []string
