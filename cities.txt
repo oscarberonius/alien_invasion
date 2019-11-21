@@ -1,0 +1,2 @@
+kba north=gbg west=uk south=skne east=sthlm
+swe north=svalbard west=norway south=denmark east=finland
