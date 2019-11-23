@@ -165,12 +165,80 @@ func spawnAliens(cityMap map[string][]int, numAliens int, currentAlien int) {
 
 }
 
+func step(cityMap map[string][]int, cities []city) {
+	var targetMap = make(map[string][]int)
+
+	// Clear positions in copy before refilling with new random positions
+	for k := range cityMap {
+		targetMap[k] = nil
+	}
+
+	// Retrieve random neighbours and fill new map
+	for name, aliens := range cityMap {
+		// Add exception check (1) here
+		var city = getCity(name, cities)
+		if city.name != "" {
+			// Alien enters neighbouring city
+			var randomNeighbour = city.getRandomNeighbour()
+			targetMap[randomNeighbour] = append(targetMap[randomNeighbour], aliens...)
+		}
+	}
+
+	// All aliens have taken 1 step, update state
+	cityMap = targetMap
+
+	// Check for fights
+	checkFights(cityMap, cities)
+
+}
+
+func getCity(name string, cities []city) city {
+	// Super ugly way of finding city object given city name, optimize later
+
+	for _, c := range cities {
+		if c.name == name {
+			return c
+		}
+	}
+	return city{} // Should not be possible, add exception check (1) or find better way
+}
+
+func checkFights(cityMap map[string][]int, cities []city) {
+
+	// Remove all cities and aliens where more than 2 aliens end up
+
+	for cityName, aliens := range cityMap {
+		if len(aliens) > 1 {
+			fmt.Printf("%s has been destroyed by aliens: %v", cityName, aliens)
+			delete(cityMap, cityName)
+
+			// Also remove city from city list. Ugly, make better than O(n^2) if needed
+			for _, c := range cities {
+				if c.name == cityName {
+					c = city{}
+				}
+			}
+		}
+	}
+}
+
 func main() {
 	fmt.Printf("Read file and create cities\n")
-	var _, cityMap = buildCities("cities.txt")
-	fmt.Printf("Citymap: %v\n", cityMap)
-	spawnAliens(cityMap, 30, 0)
-	fmt.Printf("30 aliens spawned: %+v\n", cityMap)
+	// var _, cityMap = buildCities("cities.txt")
+	// fmt.Printf("Citymap: %v\n", cityMap)
+	// spawnAliens(cityMap, 30, 0)
+	// fmt.Printf("30 aliens spawned: %+v\n", cityMap)
+
+	var cities, cityMap = buildCities("cities.txt")
+	//fmt.Printf("Cities built\n cities: %+v \n cityMap: %+v \n", cities, cityMap)
+	spawnAliens(cityMap, 5, 0)
+	fmt.Printf("\n5 aliens spawned. cityMap: \n %+v \n", cityMap)
+
+	//for i := 0; i < 20; i++ {
+	step(cityMap, cities)
+
+	//fmt.Printf("\nOne step taken, cityMap: \n%+v \n", cityMap)
+	//}
 
 	// fmt.Printf("Cities created: \n First city: %+v \n Second city: %+v\n", cities[0], cities[1])
 	// fmt.Printf("CityMap created: %+v\n", cityMap)
