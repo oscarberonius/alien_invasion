@@ -125,19 +125,27 @@ func buildCities(path string) ([]city, map[string][]int) {
 		for j := 1; j < len(cols); j++ {
 			// cols[j] == str(direction)=str(name) Right now
 			var s = strings.Split(cols[j], "=")
-			var direction, name = s[0], s[1]
+			var direction, n = s[0], s[1]
 
 			switch {
 			case direction == "north":
-				north = name
+				north = n
+				var c = city{name: n, south: name}
+				cities = append(cities, c)
 			case direction == "west":
-				west = name
+				west = n
+				var c = city{name: n, east: name}
+				cities = append(cities, c)
 			case direction == "south":
-				south = name
+				south = n
+				var c = city{name: n, north: name}
+				cities = append(cities, c)
 			case direction == "east":
-				east = name
+				east = n
+				var c = city{name: n, west: name}
+				cities = append(cities, c)
 			}
-			cityMap[name] = []int{}
+			cityMap[n] = []int{}
 
 		}
 		var c = city{name, north, west, south, east}
@@ -223,19 +231,19 @@ func checkFights(cityMap map[string][]int, cities []city) {
 }
 
 func main() {
-	fmt.Printf("Read file and create cities\n")
+	// fmt.Printf("Read file and create cities\n")
 	// var _, cityMap = buildCities("cities.txt")
 	// fmt.Printf("Citymap: %v\n", cityMap)
 	// spawnAliens(cityMap, 30, 0)
 	// fmt.Printf("30 aliens spawned: %+v\n", cityMap)
 
-	var cities, cityMap = buildCities("cities.txt")
+	// var cities, cityMap = buildCities("cities.txt")
 	//fmt.Printf("Cities built\n cities: %+v \n cityMap: %+v \n", cities, cityMap)
-	spawnAliens(cityMap, 5, 0)
-	fmt.Printf("\n5 aliens spawned. cityMap: \n %+v \n", cityMap)
+	//spawnAliens(cityMap, 5, 0)
+	// fmt.Printf("\n5 aliens spawned. cityMap: \n %+v \n cities: \n %+v\n", cityMap, cities)
 
 	//for i := 0; i < 20; i++ {
-	step(cityMap, cities)
+	//step(cityMap, cities)
 
 	//fmt.Printf("\nOne step taken, cityMap: \n%+v \n", cityMap)
 	//}
