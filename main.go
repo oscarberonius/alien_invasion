@@ -157,6 +157,7 @@ func buildCities(path string) ([]city, map[string][]int) {
 func spawnAliens(cityMap map[string][]int, numAliens int, currentAlien int) {
 	// Iterate through map and add alien IDs to each city
 	// Not completely random as maps aren't continually reshuffled, but will do for now
+	// Let multiple aliens reside in a city if #aliens > #cities in first iteration
 
 	for k, v := range cityMap {
 		cityMap[k] = append(v, currentAlien)
