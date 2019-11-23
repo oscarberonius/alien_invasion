@@ -193,9 +193,7 @@ func step(cityMap map[string][]int, cities []city) {
 		}
 	}
 
-	fmt.Printf("\nOne step taken, targetMap: \n%+v \n", targetMap)
 	// Copy new map to old (find better way to do this?)
-
 	for k, v := range targetMap {
 		cityMap[k] = v
 	}
@@ -203,6 +201,8 @@ func step(cityMap map[string][]int, cities []city) {
 	// Check for fights
 	checkFights(cityMap, cities)
 
+	// Remove destroyed paths
+	removeAllPaths(cities, cityMap)
 }
 
 func getCity(name string, cities []city) city {
@@ -222,7 +222,7 @@ func checkFights(cityMap map[string][]int, cities []city) {
 
 	for cityName, aliens := range cityMap {
 		if len(aliens) > 1 {
-			fmt.Printf("%s has been destroyed by aliens: %v", cityName, aliens)
+			fmt.Printf("\n%s has been destroyed by aliens: %v\n", cityName, aliens)
 			delete(cityMap, cityName)
 
 			// Also remove city from city list. Ugly, make better than O(n^2) if needed
@@ -236,27 +236,18 @@ func checkFights(cityMap map[string][]int, cities []city) {
 }
 
 func main() {
+	var inputFile string = "cities.txt"
+	var numAliens int = 7
 	fmt.Printf("Read file and create cities\n")
-	var cities, cityMap = buildCities("cities.txt")
-	// fmt.Printf("Citymap: %v\n", cityMap)
-	spawnAliens(cityMap, 10, 0)
-	fmt.Printf("10 aliens spawned, cityMap: %+v\n cities: %+v\n", cityMap, cities)
+	var cities, cityMap = buildCities(inputFile)
+	spawnAliens(cityMap, numAliens, 0)
+	fmt.Printf("\n%v aliens spawned, cityMap: %+v\n cities: %+v\n", numAliens, cityMap, cities)
 
-	// var cities, cityMap = buildCities("cities.txt")
-	//fmt.Printf("Cities built\n cities: %+v \n cityMap: %+v \n", cities, cityMap)
-	//spawnAliens(cityMap, 5, 0)
-	// fmt.Printf("\n5 aliens spawned. cityMap: \n %+v \n cities: \n %+v\n", cityMap, cities)
+	for i := 0; i < 10000; i++ {
+		step(cityMap, cities)
+	}
 
-	//for i := 0; i < 20; i++ {
-	step(cityMap, cities)
-
-	fmt.Printf("\nOne step taken, cityMap: \n%+v \n", cityMap)
-	//}
-
-	// fmt.Printf("Cities created: \n First city: %+v \n Second city: %+v\n", cities[0], cities[1])
-	// fmt.Printf("CityMap created: %+v\n", cityMap)
-	//var neighbour = cities[0].getRandomNeighbour()
-	//fmt.Printf("Random neighbour of city %+v : %s\n", cities[0], neighbour)
+	fmt.Printf("\n10000 steps taken, cities: %+v \n\n cityMap: %+v \n", cities, cityMap)
 
 	//Text file format:
 	// kba north=gbg west=uk south=skne east=sthlm
