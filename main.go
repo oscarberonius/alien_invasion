@@ -235,8 +235,42 @@ func checkFights(cityMap map[string][]int, cities []city) {
 	}
 }
 
+func writeFile(cities []city, path string) {
+	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+
+	datawriter := bufio.NewWriter(file)
+
+	for _, city := range cities {
+		output := city.name
+
+		// Ideally use some sort of stringbuilder instead but this will do for now
+		if city.north != "" {
+			output += " north=" + city.north
+		}
+		if city.west != "" {
+			output += " west=" + city.west
+		}
+		if city.south != "" {
+			output += " south=" + city.south
+		}
+		if city.east != "" {
+			output += " east=" + city.east
+		}
+		output += "\n"
+		_, _ = datawriter.WriteString(output)
+	}
+
+	datawriter.Flush()
+	file.Close()
+}
+
 func main() {
 	var inputFile string = "cities.txt"
+	var outputFile string = "remaining_cities.txt"
 	var numAliens int = 7
 	fmt.Printf("Read file and create cities\n")
 	var cities, cityMap = buildCities(inputFile)
@@ -247,7 +281,10 @@ func main() {
 		step(cityMap, cities)
 	}
 
-	fmt.Printf("\n10000 steps taken, cities: %+v \n\n cityMap: %+v \n", cities, cityMap)
+	fmt.Printf("\n10000 steps taken\n")
+
+	writeFile(cities, outputFile)
+	fmt.Printf("Result written to %s\n", outputFile)
 
 	//Text file format:
 	// kba north=gbg west=uk south=skne east=sthlm
